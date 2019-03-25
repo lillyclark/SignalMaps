@@ -127,9 +127,6 @@ class GAN():
         model.add(Dense(32))
         model.add(LeakyReLU(alpha=0.2))
         model.add(BatchNormalization(momentum=0.8))
-        model.add(Dense(32))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(BatchNormalization(momentum=0.8))
         model.add(Dense(self.input_shape[1]))
 
         # model.summary()
@@ -211,6 +208,6 @@ print("setting up GAP")
 gan = GAN(all_data, norm_all_data_not_inverse, rho=0.0, batch_size=128)
 
 print("training")
-gan.train(epochs=100, adversary_epochs = 10, seed=False)
+gan.train(epochs=100, adversary_epochs = 1, seed=False)
 
 # gan.eval_privatizer(gan.x)
