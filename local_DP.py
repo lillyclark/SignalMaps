@@ -87,8 +87,8 @@ class NOISE_PRIVATIZER():
     def adversary_loss(self, u, uhat):
         return keras.losses.categorical_crossentropy(u, uhat)
 
-    def build_privatizer(self):
-        sigma = (self.norm_clip**2/self.epsilon**2*2*math.log(1.25/self.delta))**1/2
+    def wrong_build_privatizer(self):
+        sigma = (self.norm_clip/self.epsilon)*math.sqrt(2*math.log(1.25/self.delta))
 
         model = Sequential()
         model.add(Dense(self.input_shape[1],
@@ -99,6 +99,13 @@ class NOISE_PRIVATIZER():
         y = model(x)
 
         return Model(x, y)
+
+    def build_privatizer(self):
+        sigma = (self.norm_clip/self.epsilon)*math.sqrt(2*math.log(1.25/self.delta))
+        def priv(x):
+            y = x + tf.random.normal([1, self.batch_size, 25], mean=0.0, stddev=sigma)
+            return y
+        return priv
 
     def build_adversary(self):
 
@@ -126,6 +133,7 @@ class NOISE_PRIVATIZER():
         u = to_categorical(self.all_data[:,25])
         print(u.shape)
 
+        prev_a_loss =0
         for epoch in range(adversary_epochs):
 
             # Select a random batch
@@ -137,9 +145,11 @@ class NOISE_PRIVATIZER():
 
             # perform l2 norm clipping
             X_train_batch = tf.clip_by_norm(X_train_batch,self.norm_clip,axes=2)
+            X_train_batch = tf.cast(X_train_batch, tf.float32)
 
             # DP gaussian mechanism
-            Y_batch = self.privatizer.predict(X_train_batch, steps=1)
+            # Y_batch = self.privatizer.predict(X_train_batch, steps=1)
+            Y_batch = self.privatizer(X_train_batch)
 
             # Train the adversary
             a_loss = self.adversary.train_on_batch(Y_batch, u_train_batch)
@@ -148,14 +158,49 @@ class NOISE_PRIVATIZER():
             if epoch % 10 == 0:
                 print ("%d [A loss: %f, acc.: %.2f%%]" % (epoch, a_loss[0], 100*a_loss[1]))
 
+            if abs(a_loss[0]-prev_a_loss)<0.001:
+                return
+            prev_a_loss = a_loss[0]
 
+    def show_batch(self, seed=False):
+        X = self.norm_all_data[:,:25]
+        # Select a random batch
+        if seed:
+            np.random.seed(0)
+        idx = np.random.randint(0, X.shape[0], self.batch_size)
+        X_batch = X[idx].reshape(1, self.batch_size, 25)
+        # perform l2 norm clipping
+        X_batch = tf.clip_by_norm(X_batch,self.norm_clip,axes=2)
+        X_batch = tf.cast(X_batch, tf.float32)
+        # DP gaussian mechanism
+        # Y_batch = self.privatizer.predict(X_batch, steps=1)
+        Y_batch = self.privatizer(X_batch)
 
-# TO DO: replace file names
-all_data = np.genfromtxt('alldata_sample')
-# norm_all_data_not_inverse = np.genfromtxt('norm_all_data_not_inverse_sample')
-norm_all_data = np.genfromtxt('norm_all_data_not_inverse_sample')
+        X_batch = X_batch.eval(session=keras.backend.get_session())
+        Y_batch = Y_batch.eval(session=keras.backend.get_session())
+        fig, ax = plt.subplots(1, 2, figsize=(15, 5))
+        ax[0].scatter(X_batch[0,:,13], X_batch[0,:,12], c=X_batch[0,:,6].tolist())
+        ax[0].set_title("Input Data")
+        ax[1].scatter(Y_batch[0,:,13], Y_batch[0,:,12], c=Y_batch[0,:,6].tolist())
+        ax[1].set_title("Obfuscated Data")
+        # plt.colorbar()
+        plt.show()
+
+all_data = np.genfromtxt('alldata')
+norm_all_data = np.genfromtxt('norm_all_data_not_inverse')
 
 print("setting up...")
-n = NOISE_PRIVATIZER(all_data, norm_all_data, batch_size=128, epsilon=0.1, delta=0.1, norm_clip=4.0)
+# TODO choose norm_clip
+n = NOISE_PRIVATIZER(all_data, norm_all_data, batch_size=128, epsilon=0.3, delta=0.3, norm_clip=4.0)
+
+## NOTES ON PERFORMANCE
+# for epsilon = 0.1, delta = 0.1, norm_clip = 4.0...... a_loss = 1.81350, acc = 14.84%
+# for epsilon = 0.2, delta = 0.2, norm_clip = 4.0...... a_loss = 1.726090, acc = 24.22%
+# for epsilon = 0.3, delta = 0.3, norm_clip = 4.0...... a_loss = 1.792992, acc = 15.62%
+# for epsilon = 0.3, delta = 0.3, norm_clip = 4.0...... a_loss = 1.653876, acc = 25.78%
+
+# print("demonstrating privatizer on one batch")
+# n.show_batch()
+
 print("training adversary")
-n.train(adversary_epochs=100, seed=True)
+n.train(adversary_epochs=200, seed=False)
