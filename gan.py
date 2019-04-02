@@ -74,13 +74,14 @@ class GAN():
         rss_pred = tf.matmul(v_grid, b)
         return v, b, grid, v_grid, rss_pred
 
-    def __init__(self, all_data, norm_all_data, rho, batch_size):
+    def __init__(self, all_data, norm_all_data, num_users, rho, batch_size):
         self.rho = rho
         self.batch_size = batch_size
         self.all_data = all_data
         self.norm_all_data = norm_all_data
         self.input_shape = (batch_size, norm_all_data.shape[1]-1)
         self.x1min, self.x1max, self.x2min, self.x2max = np.min(norm_all_data[:,13]), np.max(norm_all_data[:,13]), np.min(norm_all_data[:,12]), np.max(norm_all_data[:,12])
+        self.print_utility_loss = False
 
         # TODO
         optimizer = Adam(lr=0.001, beta_1=0.9)
@@ -112,6 +113,8 @@ class GAN():
         vx, bx, gridx, v_gridx, rssinv_predx = self.tf_fitmap(self.x[0], polynomial_degree)
         vy, by, gridy, v_gridy, rssinv_predy = self.tf_fitmap(self.y[0], polynomial_degree)
         utility_loss = tf.reduce_mean(tf.square(by-bx))
+        if self.print_utility_loss:
+            print(utility_loss)
         privacy_loss = -1*keras.losses.categorical_crossentropy(u, uhat)
         return self.rho*utility_loss + (1-self.rho)*privacy_loss
 
@@ -145,7 +148,7 @@ class GAN():
         model.add(Dense(32))
         model.add(LeakyReLU(alpha=0.2))
         model.add(BatchNormalization(momentum=0.8))
-        model.add(Dense(5, activation='softmax'))
+        model.add(Dense(self.num_users, activation='softmax'))
 
         # model.summary()
 
@@ -170,7 +173,7 @@ class GAN():
             idx = np.random.randint(0, X_train.shape[0], self.batch_size)
             X_train_batch = X_train[idx].reshape(1, self.batch_size, 25)
             self.x = X_train_batch
-            u_train_batch = u[idx].reshape(1, self.batch_size, 5)
+            u_train_batch = u[idx].reshape(1, self.batch_size, self.num_users)
 
             # generate obfuscated data
             Y_batch = self.privatizer.predict(X_train_batch)
@@ -186,7 +189,10 @@ class GAN():
             uhat_batch = self.adversary.predict(Y_batch)
 
             # Train the privatizer
+            if epoch % 10 == 0:
+                self.print_utility_loss = True
             self.p_loss = self.combined.train_on_batch(X_train_batch, u_train_batch)
+            self.print_utility_loss = False
 
             # log the progress
             if epoch % 10 == 0:
@@ -200,14 +206,18 @@ class GAN():
         vy, by, gridy, v_gridy, rssinv_predy = fitmap(y.reshape((self.batch_size, 25)), 4, show=True)
         return y
 
-all_data = np.genfromtxt('alldata')
-norm_all_data_not_inverse = np.genfromtxt('norm_all_data_not_inverse')
+all_data = np.genfromtxt('augmented_data')
+norm_all_data = np.genfromtxt('normalized_augmented_data')
 
 print("setting up GAP")
 # rho of 1 is all utility, rho 0 is all privacy
-gan = GAN(all_data, norm_all_data_not_inverse, rho=0.0, batch_size=128)
+gan = GAN(all_data, norm_all_data, num_users=9, rho=0.0, batch_size=128)
 
 print("training")
-gan.train(epochs=100, adversary_epochs = 1, seed=False)
+gan.train(epochs=11, adversary_epochs = 1, seed=False)
 
 # gan.eval_privatizer(gan.x)
+
+#### NOTES ON PERFORMANCE ####
+# rho=0.0, batch_size=128, epochs=11, adversary_epochs = 1
+# 

@@ -76,5 +76,6 @@ def fitmap(data, num_degrees, show=False, cell_tower=None):
         plt.colorbar()
         if cell_tower:
             plt.scatter(cell_tower[0], cell_tower[1], marker="X", c='red')
+        plt.title("Map Fitted using %d Polynomial" %num_degrees)
         plt.show()
     return v, b, grid, v_grid, rssinv_pred
