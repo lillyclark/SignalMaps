@@ -75,13 +75,13 @@ class GAN():
         return v, b, grid, v_grid, rss_pred
 
     def __init__(self, all_data, norm_all_data, num_users, rho, batch_size):
+        self.num_users = num_users
         self.rho = rho
         self.batch_size = batch_size
         self.all_data = all_data
         self.norm_all_data = norm_all_data
         self.input_shape = (batch_size, norm_all_data.shape[1]-1)
         self.x1min, self.x1max, self.x2min, self.x2max = np.min(norm_all_data[:,13]), np.max(norm_all_data[:,13]), np.min(norm_all_data[:,12]), np.max(norm_all_data[:,12])
-        self.print_utility_loss = False
 
         # TODO
         optimizer = Adam(lr=0.001, beta_1=0.9)
@@ -113,8 +113,6 @@ class GAN():
         vx, bx, gridx, v_gridx, rssinv_predx = self.tf_fitmap(self.x[0], polynomial_degree)
         vy, by, gridy, v_gridy, rssinv_predy = self.tf_fitmap(self.y[0], polynomial_degree)
         utility_loss = tf.reduce_mean(tf.square(by-bx))
-        if self.print_utility_loss:
-            print(utility_loss)
         privacy_loss = -1*keras.losses.categorical_crossentropy(u, uhat)
         return self.rho*utility_loss + (1-self.rho)*privacy_loss
 
@@ -189,14 +187,18 @@ class GAN():
             uhat_batch = self.adversary.predict(Y_batch)
 
             # Train the privatizer
-            if epoch % 10 == 0:
-                self.print_utility_loss = True
             self.p_loss = self.combined.train_on_batch(X_train_batch, u_train_batch)
-            self.print_utility_loss = False
 
             # log the progress
             if epoch % 10 == 0:
                 print ("%d [A loss: %f, acc.: %.2f%%] [P loss: %f]" % (epoch, self.a_loss[0], 100*self.a_loss[1], self.p_loss))
+
+    def print_utility_loss(self):
+        polynomial_degree = 2
+        vx, bx, gridx, v_gridx, rss_predx = self.tf_fitmap(tf.cast(self.x[0], tf.float32), polynomial_degree)
+        vy, by, gridy, v_gridy, rss_predy = self.tf_fitmap(tf.cast(self.y[0], tf.float32), polynomial_degree)
+        utility_loss = tf.reduce_mean(tf.square(by-bx))
+        return utility_loss.eval(session=keras.backend.get_session())
 
     def eval_privatizer(self, x):
         y = self.privatizer.predict(x)
@@ -214,10 +216,7 @@ print("setting up GAP")
 gan = GAN(all_data, norm_all_data, num_users=9, rho=0.0, batch_size=128)
 
 print("training")
-gan.train(epochs=11, adversary_epochs = 1, seed=False)
+gan.train(epochs=1, adversary_epochs = 1, seed=False)
+print(gan.print_utility_loss())
 
 # gan.eval_privatizer(gan.x)
-
-#### NOTES ON PERFORMANCE ####
-# rho=0.0, batch_size=128, epochs=11, adversary_epochs = 1
-# 
