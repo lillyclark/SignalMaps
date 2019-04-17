@@ -17,7 +17,6 @@ norm_all_data = np.genfromtxt('normalized_augmented_data')
 n = norm_all_data.shape[0]
 
 # fit map to dataset
-# should I fit the pre-normalized data?
 v = vandermonde(norm_all_data, 2)
 b = beta(v, norm_all_data[:,6])
 
@@ -26,18 +25,26 @@ x1min, x1max, x2min, x2max = np.min(norm_all_data[:,13]), np.max(norm_all_data[:
 newx1 = np.random.uniform(x1min,x1max,n).reshape(1,n).T
 newx2 = np.random.uniform(x2min,x2max,n).reshape(1,n).T
 newpoints = np.concatenate((newx1, newx2),1)
-print(newpoints.shape)
 
 # sample generated map distribution
 v_newpoints = vandermonde(newpoints, 2)
 newrss = np.dot(v_newpoints, b)
-print(newrss.shape)
 
 # populate and return new dataset
 Y = norm_all_data.copy()
 Y[:,13] = newx1[:,0]
 Y[:,12] = newx2[:,0]
 Y[:,6] = newrss[:,0]
+
+scramble_all_features = True
+if scramble_all_features:
+    for feature in range(25):
+        if feature == 12 or feature == 13 or feature == 6:
+            pass
+        else:
+            start, end = np.min(norm_all_data[:,feature]), np.min(norm_all_data[:,feature])
+            newfeature = np.random.uniform(start, end, n).reshape(1,n).T
+            Y[:,feature] = newfeature[:,0]
 
 showplots = False
 if showplots:
@@ -56,10 +63,13 @@ if showplots:
 v_eval = vandermonde(Y, 2)
 b_eval = beta(v_eval,Y[:,6])
 beta_loss = np.mean(np.square(b-b_eval))
-print("UTILITY LOSS 1:", beta_loss)
+print("UTILITY LOSS 1 (error in map fitting):", beta_loss)
 
 distortion_loss = np.mean(np.square(norm_all_data-Y))
-print("UTILITY LOSS 2:", distortion_loss)
+print("UTILITY LOSS 2 (full dataset distance):", distortion_loss)
+
+geographic_distortion = np.mean(np.square(norm_all_data[:,12:14]-Y[:,12:14]))
+print("UTILITY LOSS 3 (just geographic distance):", geographic_distortion)
 
 # evaluate privacy
 num_users = 9
@@ -82,7 +92,7 @@ adversary.compile(loss='categorical_crossentropy',
     metrics=['accuracy'])
 u = to_categorical(all_data[:,25])
 
-# if controlling portion adversary can train on, to model side information
+# controlling portion adversary can train on, to model side information
 train_portion = 0.8
 idx = np.arange(Y.shape[0])
 np.random.shuffle(idx)
@@ -91,10 +101,11 @@ u_train = u[idx][0:int(train_portion*Y.shape[0])]
 Y_test = Y[idx][int(train_portion*Y.shape[0]):]
 u_test = u[idx][int(train_portion*Y.shape[0]):]
 
-# 870 epochs are theoretically needed to cover the whole dataset
-adversary_epochs = 1000
+adversary_epochs = int((445419*train_portion)/input_shape[0])
+extra_epochs = 0
 
-for epoch in range(adversary_epochs):
+print("training for", adversary_epochs+extra_epochs, "epochs")
+for epoch in range(adversary_epochs+extra_epochs):
     # Select a random batch
     idx = np.random.randint(0, Y_train.shape[0], input_shape[0])
     Y_batch = Y_train[:,:25][idx].reshape(1, input_shape[0], input_shape[1])
@@ -105,6 +116,6 @@ for epoch in range(adversary_epochs):
     if epoch % 100 == 0:
         print ("%d [A loss: %f, acc.: %.2f%%]" % (epoch, a_loss[0], 100*a_loss[1]))
 
-# test on all data, not just train_portion
+# test adversary
 a_loss = adversary.test_on_batch(Y_test[:,:25].reshape(1, Y_test.shape[0], input_shape[1]), u_test.reshape(1, u_test.shape[0], num_users))
 print("PRIVACY LOSS:", a_loss[0])
