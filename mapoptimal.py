@@ -101,7 +101,7 @@ u_train = u[idx][0:int(train_portion*Y.shape[0])]
 Y_test = Y[idx][int(train_portion*Y.shape[0]):]
 u_test = u[idx][int(train_portion*Y.shape[0]):]
 
-adversary_epochs = int((445419*train_portion)/input_shape[0])
+adversary_epochs = int((n*train_portion)/input_shape[0])
 extra_epochs = 0
 
 print("training for", adversary_epochs+extra_epochs, "epochs")
