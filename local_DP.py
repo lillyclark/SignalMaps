@@ -41,6 +41,7 @@ class NOISE_PRIVATIZER():
     def build_privatizer(self):
         # if unconcerned with DP guarantees, set sigma directly
         sigma = (self.norm_clip/self.epsilon)*math.sqrt(2*math.log(1.25/self.delta))
+        # sigma = 20.0
         def priv(x):
             noise = np.random.normal(loc=0.0, scale=sigma, size=(self.n, 25))
             y = x + noise
@@ -62,10 +63,13 @@ class NOISE_PRIVATIZER():
 
     def privatize(self):
         X = self.norm_all_data[:,:25]
-        normvec = np.linalg.norm(X, axis=1)
-        scalevec = self.norm_clip/normvec
-        scalevec[np.where(scalevec>1)] = 1
-        self.X = (X.T*scalevec).T
+        if self.norm_clip is None:
+            self.X = X
+        else:
+            normvec = np.linalg.norm(X, axis=1)
+            scalevec = self.norm_clip/normvec
+            scalevec[np.where(scalevec>1)] = 1
+            self.X = (X.T*scalevec).T
         self.Y = self.privatizer(self.X)
         self.u = to_categorical(self.all_data[:,25])
 

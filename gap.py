@@ -56,7 +56,8 @@ class GAP():
         geographic_distortion = tf.reduce_mean(tf.square(X[:,12:14]-Y[:,12:14]))
         privacy_loss = keras.losses.categorical_crossentropy(u, uhat)
         # TO DO
-        return beta_loss + distortion_loss + geographic_distortion - privacy_loss
+        w_b, w_d, w_g = 1, 1, 1
+        return self.rho*(w_b*beta_loss + w_d*distortion_loss + w_g*geographic_distortion) - (1-self.rho)*privacy_loss
 
     def build_privatizer(self):
         model = Sequential()
@@ -96,7 +97,7 @@ class GAP():
         self.X_test = self.X[testidx]
         self.u_train = self.u[trainidx]
         self.u_test = self.u[testidx]
-        extra_epochs = 0
+        extra_epochs = 10000
         self.epochs = int(k/self.batch_size)+extra_epochs
 
     def train(self, seed=False):
@@ -112,7 +113,8 @@ class GAP():
             self.u_batch = self.u_train[idx].reshape(1, self.batch_size, self.num_users)
             # Train the adversary
             self.adversary.trainable = True
-            a_loss = self.adversary.train_on_batch(self.Y_batch, self.u_batch)
+            for e in range(1):
+                a_loss = self.adversary.train_on_batch(self.Y_batch, self.u_batch)
             self.adversary.trainable = False
             # Estimate u
             self.uhat_batch = self.adversary.predict(self.Y_batch)
@@ -158,7 +160,7 @@ class GAP():
 all_data = np.genfromtxt('augmented_data')
 norm_all_data = np.genfromtxt('normalized_augmented_data')
 
-n = GAP(all_data, norm_all_data, num_users=9, batch_size=512, rho=1.0)
+n = GAP(all_data, norm_all_data, num_users=9, batch_size=512, rho=0.25)
 n.split_data(train_portion = 0.8)
 n.train()
 n.eval_utility()

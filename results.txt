@@ -145,3 +145,220 @@ training for 3695 epochs
 0 [A loss: 2.790942, acc.: 11.72%]
 3600 [A loss: 1.660752, acc.: 33.79%]
 PRIVACY LOSS: 1.6924888
+
+GAUSSIAN NOISE
+
+batch_size=512, sigma = 0.1, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 3.9515087634890606e-05
+UTILITY LOSS 2 (full dataset distance): 0.009998401982786398
+UTILITY LOSS 3 (just geographic distance): 0.01001885854416119
+training for 3695 epochs
+0 [A loss: 3.012761, acc.: 5.27%]
+3600 [A loss: 0.061588, acc.: 98.63%]
+PRIVACY LOSS: 0.08005373
+
+batch_size=512, sigma = 0.2, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.0006114600448415837
+UTILITY LOSS 2 (full dataset distance): 0.03997899878147616
+UTILITY LOSS 3 (just geographic distance): 0.0399628801932713
+training for 3695 epochs
+0 [A loss: 2.162656, acc.: 25.00%]
+3600 [A loss: 0.112209, acc.: 95.12%]
+PRIVACY LOSS: 0.11820216
+
+batch_size=512, sigma = 0.3, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.0022373566007097925
+UTILITY LOSS 2 (full dataset distance): 0.09007439884943957
+UTILITY LOSS 3 (just geographic distance): 0.0900710630711813
+training for 3695 epochs
+0 [A loss: 2.367861, acc.: 11.91%]
+3600 [A loss: 0.245637, acc.: 91.02%]
+PRIVACY LOSS: 0.50745034
+
+batch_size=512, sigma = 0.4, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.005235054190604619
+UTILITY LOSS 2 (full dataset distance): 0.15997634434208227
+UTILITY LOSS 3 (just geographic distance): 0.15969534687359152
+training for 3695 epochs
+0 [A loss: 3.119816, acc.: 5.47%]
+3600 [A loss: 0.312801, acc.: 87.11%]
+PRIVACY LOSS: 0.5038534
+
+batch_size=512, sigma = 0.5, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.009026039107351193
+UTILITY LOSS 2 (full dataset distance): 0.25008966050525955
+UTILITY LOSS 3 (just geographic distance): 0.2507384606017598
+training for 3695 epochs
+0 [A loss: 2.740102, acc.: 11.91%]
+3600 [A loss: 0.368964, acc.: 85.55%]
+PRIVACY LOSS: 0.46333587
+
+batch_size=512, sigma = 1.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.02662277587791524
+UTILITY LOSS 2 (full dataset distance): 1.0002381433768963
+UTILITY LOSS 3 (just geographic distance): 1.0001878216092484
+training for 3695 epochs
+0 [A loss: 2.761115, acc.: 12.89%]
+3600 [A loss: 0.793875, acc.: 69.34%]
+PRIVACY LOSS: 0.8158704
+
+batch_size=512, sigma = 2.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.038971455972346955
+UTILITY LOSS 2 (full dataset distance): 4.001733830445629
+UTILITY LOSS 3 (just geographic distance): 4.0062312425378295
+training for 3695 epochs
+0 [A loss: 3.029636, acc.: 10.94%]
+3600 [A loss: 1.180387, acc.: 54.88%]
+PRIVACY LOSS: 1.2401962
+
+batch_size=512, sigma = 3.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.041841433817109856
+UTILITY LOSS 2 (full dataset distance): 9.003257842545205
+UTILITY LOSS 3 (just geographic distance): 8.975942083270489
+training for 3695 epochs
+0 [A loss: 2.897745, acc.: 9.77%]
+3600 [A loss: 1.429295, acc.: 40.82%]
+PRIVACY LOSS: 1.440252
+
+batch_size=512, sigma = 4.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.04335637167237614
+UTILITY LOSS 2 (full dataset distance): 16.008260657832157
+UTILITY LOSS 3 (just geographic distance): 16.039512736623497
+training for 3695 epochs
+0 [A loss: 2.768157, acc.: 10.55%]
+3600 [A loss: 1.533307, acc.: 37.89%]
+PRIVACY LOSS: 1.5453311
+
+batch_size=512, sigma = 5.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.04474908906199757
+UTILITY LOSS 2 (full dataset distance): 25.009783270560916
+UTILITY LOSS 3 (just geographic distance): 25.014991358599534
+training for 3695 epochs
+0 [A loss: 2.870190, acc.: 12.11%]
+3600 [A loss: 1.660481, acc.: 32.23%]
+PRIVACY LOSS: 1.5943038
+
+batch_size=512, sigma = 6.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.04478542075664902
+UTILITY LOSS 2 (full dataset distance): 35.9752629860695
+UTILITY LOSS 3 (just geographic distance): 35.92308911792527
+training for 3695 epochs
+0 [A loss: 2.734748, acc.: 9.57%]
+3600 [A loss: 1.611784, acc.: 36.13%]
+PRIVACY LOSS: 1.6233164
+
+batch_size=512, sigma = 10.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.045529030004198334
+UTILITY LOSS 2 (full dataset distance): 99.9749448674651
+UTILITY LOSS 3 (just geographic distance): 100.12911207771403
+training for 3695 epochs
+0 [A loss: 2.904308, acc.: 8.59%]
+3600 [A loss: 1.643197, acc.: 33.59%]
+PRIVACY LOSS: 1.6662323
+
+batch_size=512, sigma = 15.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.04529793374016292
+UTILITY LOSS 2 (full dataset distance): 225.18534230429177
+UTILITY LOSS 3 (just geographic distance): 225.09382825884063
+training for 3695 epochs
+0 [A loss: 2.723580, acc.: 13.67%]
+3600 [A loss: 1.679977, acc.: 32.03%]
+PRIVACY LOSS: 1.6819326
+
+batch_size=512, sigma = 20.0, train_portion = 0.8, norm_clip = None
+
+UTILITY LOSS 1 (error in map fitting): 0.04553624221272642
+UTILITY LOSS 2 (full dataset distance): 400.19798833809216
+UTILITY LOSS 3 (just geographic distance): 400.65998762859186
+training for 3695 epochs
+0 [A loss: 2.800648, acc.: 11.13%]
+3600 [A loss: 1.701901, acc.: 31.25%]
+PRIVACY LOSS: 1.6878601
+
+GENERATIVE ADVERSARIAL PRIVACY
+
+batch_size=512, rho=0.0, train_portion = 0.8, k=1
+
+training for 3695 epochs
+0 [A loss: 2.705686, acc.: 9.77%] [P loss: -2.349243]
+3600 [A loss: 1.491514, acc.: 45.51%] [P loss: -1.968383]
+UTILITY LOSS 1 (error in map fitting): 0.8934695
+UTILITY LOSS 2 (full dataset distance): 3902.976350684359
+UTILITY LOSS 3 (just geographic distance): 2.2093187726407524
+PRIVACY LOSS: 1.5685468
+
+batch_size=512, rho=0.25, train_portion = 0.8, k=1
+
+training for 3695 epochs
+0 [A loss: 2.915177, acc.: 4.10%] [P loss: 972.960632]
+3600 [A loss: 0.184839, acc.: 95.51%] [P loss: -0.191853]
+UTILITY LOSS 1 (error in map fitting): 0.0130937295
+UTILITY LOSS 2 (full dataset distance): 1.276178443982761
+UTILITY LOSS 3 (just geographic distance): 0.26149588101000615
+PRIVACY LOSS: 1.96886
+
+training for 3695 epochs
+0 [A loss: 2.706863, acc.: 15.82%] [P loss: 972.494995]
+3600 [A loss: 0.194767, acc.: 94.92%] [P loss: -1.158585]
+UTILITY LOSS 1 (error in map fitting): 0.022569308
+UTILITY LOSS 2 (full dataset distance): 1.006129674337764
+UTILITY LOSS 3 (just geographic distance): 0.17562201718178458
+PRIVACY LOSS: 0.6178136
+
+training for 3695 epochs
+0 [A loss: 2.953749, acc.: 8.40%] [P loss: 972.751953]
+3600 [A loss: 0.167780, acc.: 93.75%] [P loss: -0.037804]
+UTILITY LOSS 1 (error in map fitting): 0.01290023
+UTILITY LOSS 2 (full dataset distance): 1.0862755771503148
+UTILITY LOSS 3 (just geographic distance): 0.3171857327130195
+PRIVACY LOSS: 3.4268796
+
+batch_size=512, rho=0.5, train_portion = 0.8, k=1
+
+training for 3695 epochs
+0 [A loss: 2.623894, acc.: 12.70%] [P loss: 1947.970703]
+3600 [A loss: 0.086137, acc.: 97.46%] [P loss: 0.041404]
+UTILITY LOSS 1 (error in map fitting): 0.0044476665
+UTILITY LOSS 2 (full dataset distance): 0.2452409601688433
+UTILITY LOSS 3 (just geographic distance): 0.020848327745038545
+PRIVACY LOSS: 0.08670679
+
+training for 3695 epochs
+0 [A loss: 2.524438, acc.: 10.35%] [P loss: 1948.397949]
+3600 [A loss: 0.142836, acc.: 96.09%] [P loss: -0.020989]
+UTILITY LOSS 1 (error in map fitting): 0.023842117
+UTILITY LOSS 2 (full dataset distance): 1.5159082084828635
+UTILITY LOSS 3 (just geographic distance): 0.16876540465465303
+PRIVACY LOSS: 0.07237056
+
+batch_size=512, rho=1.0, train_portion = 0.8, k=1
+
+training for 3695 epochs
+0 [A loss: 2.504369, acc.: 11.72%] [P loss: 3899.128906]
+3600 [A loss: 0.071842, acc.: 98.44%] [P loss: 0.173471]
+UTILITY LOSS 1 (error in map fitting): 0.006829748
+UTILITY LOSS 2 (full dataset distance): 0.3277640789908179
+UTILITY LOSS 3 (just geographic distance): 0.054966698708875036
+PRIVACY LOSS: 0.10699853
+
+batch_size=512, rho=0.25, train_portion = 0.8, k=1
+training for 10695 epochs
+0 [A loss: 2.590764, acc.: 21.48%] [P loss: 972.576477]
+10600 [A loss: 0.192034, acc.: 95.31%] [P loss: -3.094098]
+UTILITY LOSS 1 (error in map fitting): 0.015325268
+UTILITY LOSS 2 (full dataset distance): 2.4185124727989344
+UTILITY LOSS 3 (just geographic distance): 0.8480664509244928
+PRIVACY LOSS: 0.15228894
