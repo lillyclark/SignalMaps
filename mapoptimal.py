@@ -10,6 +10,13 @@ from keras.models import Sequential, Model
 from keras.optimizers import Adam
 from keras.utils import to_categorical
 
+# PARAMETERS
+scramble_all_features = True
+showplots = False
+BATCH_SIZE = 512
+train_portion = 0.7
+extra_epochs = 3000
+
 # read in dataset
 all_data = np.genfromtxt('augmented_data')
 norm_all_data = np.genfromtxt('normalized_augmented_data')
@@ -36,7 +43,6 @@ Y[:,13] = newx1[:,0]
 Y[:,12] = newx2[:,0]
 Y[:,6] = newrss[:,0]
 
-scramble_all_features = True
 if scramble_all_features:
     for feature in range(25):
         if feature == 12 or feature == 13 or feature == 6:
@@ -46,7 +52,6 @@ if scramble_all_features:
             newfeature = np.random.uniform(start, end, n).reshape(1,n).T
             Y[:,feature] = newfeature[:,0]
 
-showplots = False
 if showplots:
     p = plt.scatter(norm_all_data[:,13], norm_all_data[:,12], c=norm_all_data[:,6])
     plt.colorbar()
@@ -73,7 +78,7 @@ print("UTILITY LOSS 3 (just geographic distance):", geographic_distortion)
 
 # evaluate privacy
 num_users = 9
-input_shape = (512, 25)
+input_shape = (BATCH_SIZE, 25)
 model = Sequential()
 model.add(Dense(32, input_dim=input_shape[1]))
 model.add(LeakyReLU(alpha=0.2))
@@ -93,7 +98,6 @@ adversary.compile(loss='categorical_crossentropy',
 u = to_categorical(all_data[:,25])
 
 # controlling portion adversary can train on, to model side information
-train_portion = 0.8
 idx = np.arange(Y.shape[0])
 np.random.shuffle(idx)
 Y_train = Y[idx][0:int(train_portion*Y.shape[0])]
@@ -102,7 +106,6 @@ Y_test = Y[idx][int(train_portion*Y.shape[0]):]
 u_test = u[idx][int(train_portion*Y.shape[0]):]
 
 adversary_epochs = int((n*train_portion)/input_shape[0])
-extra_epochs = 0
 
 print("training for", adversary_epochs+extra_epochs, "epochs")
 for epoch in range(adversary_epochs+extra_epochs):

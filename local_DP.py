@@ -93,7 +93,7 @@ class NOISE_PRIVATIZER():
         self.Y_test = self.Y[testidx]
         self.u_train = self.u[trainidx]
         self.u_test = self.u[testidx]
-        extra_epochs = 0
+        extra_epochs = 3000
         self.adversary_epochs = int(k/self.batch_size)+extra_epochs
 
     def train(self, seed=False):
@@ -130,10 +130,10 @@ class NOISE_PRIVATIZER():
 all_data = np.genfromtxt('augmented_data')
 norm_all_data = np.genfromtxt('normalized_augmented_data')
 
-n = NOISE_PRIVATIZER(all_data, norm_all_data, num_users=9, batch_size=512, epsilon=0.1, delta=10**-5, norm_clip=4.0)
+n = NOISE_PRIVATIZER(all_data, norm_all_data, num_users=9, batch_size=512, epsilon=0.05, delta=10**-5, norm_clip=4.0)
 n.privatize()
 n.eval_utility()
 n.split_data(train_portion = 0.8)
 n.train()
 n.eval_privacy()
-n.showplots()
+# n.showplots()

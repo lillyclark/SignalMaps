@@ -1,0 +1,147 @@
+MAP OPTIMAL
+
+scramble_all_features = True
+BATCH_SIZE = 512
+train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 3.1485824954571677e-28
+UTILITY LOSS 2 (full dataset distance): 12939.57115461606
+UTILITY LOSS 3 (just geographic distance): 27.007480818086567
+training for 695 epochs
+0 [A loss: 2.837309, acc.: 7.62%]
+600 [A loss: 1.753598, acc.: 26.56%]
+PRIVACY LOSS: 1.7747369
+
+UTILITY LOSS 1 (error in map fitting): 1.2530749256574615e-27
+UTILITY LOSS 2 (full dataset distance): 12939.562472999232
+UTILITY LOSS 3 (just geographic distance): 26.995555558203353
+training for 1695 epochs
+0 [A loss: 2.715801, acc.: 11.52%]
+1600 [A loss: 1.696545, acc.: 33.01%]
+PRIVACY LOSS: 1.7171613
+
+UTILITY LOSS 1 (error in map fitting): 2.791015409268411e-27
+UTILITY LOSS 2 (full dataset distance): 12939.55981456498
+UTILITY LOSS 3 (just geographic distance): 27.006138924344615
+training for 2695 epochs
+0 [A loss: 2.533908, acc.: 16.21%]
+2600 [A loss: 1.728879, acc.: 30.86%]
+PRIVACY LOSS: 1.7314441
+
+UTILITY LOSS 1 (error in map fitting): 1.1491799286331792e-29
+UTILITY LOSS 2 (full dataset distance): 12939.567044634709
+UTILITY LOSS 3 (just geographic distance): 27.009769327849774
+training for 3695 epochs
+0 [A loss: 2.885308, acc.: 9.18%]
+3600 [A loss: 1.676020, acc.: 32.42%]
+PRIVACY LOSS: 1.7389812
+
+scramble_all_features = True
+BATCH_SIZE = 512
+train_portion = 0.9
+
+UTILITY LOSS 1 (error in map fitting): 2.6750375370331563e-27
+UTILITY LOSS 2 (full dataset distance): 12939.568559631989
+UTILITY LOSS 3 (just geographic distance): 27.023465111388287
+training for 3782 epochs
+0 [A loss: 3.031570, acc.: 12.70%]
+3700 [A loss: 1.734296, acc.: 29.10%]
+PRIVACY LOSS: 1.7149704
+
+scramble_all_features = True
+BATCH_SIZE = 512
+train_portion = 0.7
+
+UTILITY LOSS 1 (error in map fitting): 3.628718114546202e-28
+UTILITY LOSS 2 (full dataset distance): 12939.557149927647
+UTILITY LOSS 3 (just geographic distance): 26.989756232240534
+training for 3608 epochs
+0 [A loss: 2.986753, acc.: 12.11%]
+3600 [A loss: 1.690702, acc.: 33.98%]
+PRIVACY LOSS: 1.7030631
+
+scramble_all_features = False
+BATCH_SIZE = 512
+train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 1.309356312224625e-29
+UTILITY LOSS 2 (full dataset distance): 4.132393256151908
+UTILITY LOSS 3 (just geographic distance): 26.945771544473264
+training for 695 epochs
+0 [A loss: 2.719934, acc.: 13.28%]
+600 [A loss: 0.266480, acc.: 92.58%]
+PRIVACY LOSS: 1.1944898
+
+UTILITY LOSS 1 (error in map fitting): 2.2181621442544647e-27
+UTILITY LOSS 2 (full dataset distance): 4.126576398875786
+UTILITY LOSS 3 (just geographic distance): 26.972460859585503
+training for 1695 epochs
+0 [A loss: 2.509300, acc.: 16.60%]
+1600 [A loss: 0.145906, acc.: 94.73%]
+PRIVACY LOSS: 1.1039159
+
+UTILITY LOSS 1 (error in map fitting): 4.876155779058777e-28
+UTILITY LOSS 2 (full dataset distance): 4.138491137467595
+UTILITY LOSS 3 (just geographic distance): 27.017091156024115
+training for 2695 epochs
+0 [A loss: 2.712377, acc.: 9.38%]
+2600 [A loss: 0.133807, acc.: 96.48%]
+PRIVACY LOSS: 1.340562
+
+UTILITY LOSS 1 (error in map fitting): 2.3556580064488283e-27
+UTILITY LOSS 2 (full dataset distance): 4.130844198415693
+UTILITY LOSS 3 (just geographic distance): 26.97050448801999
+training for 2695 epochs
+0 [A loss: 2.914811, acc.: 11.52%]
+2600 [A loss: 0.104749, acc.: 97.27%]
+PRIVACY LOSS: 1.0869794
+
+LOCAL DIFFERENTIAL PRIVACY
+
+batch_size=512, epsilon=0.1, delta=10**-5, norm_clip=4.0, train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 54.55585672489452
+UTILITY LOSS 2 (full dataset distance): 37553.32077889125
+UTILITY LOSS 3 (just geographic distance): 37644.23438530674
+training for 3695 epochs
+0 [A loss: 2.721193, acc.: 10.16%]
+3600 [A loss: 1.687704, acc.: 35.55%]
+PRIVACY LOSS: 1.692827
+
+UTILITY LOSS 1 (error in map fitting): 54.52579777990234
+UTILITY LOSS 2 (full dataset distance): 37568.13462467735
+UTILITY LOSS 3 (just geographic distance): 37504.708338334036
+training for 3695 epochs
+0 [A loss: 3.005414, acc.: 10.16%]
+3600 [A loss: 1.697172, acc.: 33.40%]
+PRIVACY LOSS: 1.6927549
+
+batch_size=512, epsilon=0.2, delta=10**-5, norm_clip=4.0, train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 54.559709128527565
+UTILITY LOSS 2 (full dataset distance): 9386.11856748339
+UTILITY LOSS 3 (just geographic distance): 9395.369833241246
+training for 3695 epochs
+0 [A loss: 2.805752, acc.: 11.33%]
+3600 [A loss: 1.727852, acc.: 30.27%]
+PRIVACY LOSS: 1.6913215
+
+batch_size=512, epsilon=0.3, delta=10**-5, norm_clip=4.0, train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 54.52262584740274
+UTILITY LOSS 2 (full dataset distance): 4174.531361338477
+UTILITY LOSS 3 (just geographic distance): 4170.849858596915
+training for 3695 epochs
+0 [A loss: 2.670963, acc.: 9.38%]
+3600 [A loss: 1.693157, acc.: 33.79%]
+PRIVACY LOSS: 1.6933391
+
+batch_size=512, epsilon=0.05, delta=10**-5, norm_clip=4.0, train_portion = 0.8
+
+UTILITY LOSS 1 (error in map fitting): 54.61691621074451
+UTILITY LOSS 2 (full dataset distance): 150175.69284678536
+UTILITY LOSS 3 (just geographic distance): 150380.44799153053
+training for 3695 epochs
+0 [A loss: 2.790942, acc.: 11.72%]
+3600 [A loss: 1.660752, acc.: 33.79%]
+PRIVACY LOSS: 1.6924888
