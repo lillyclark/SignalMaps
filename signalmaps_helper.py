@@ -51,9 +51,27 @@ def vandermonde(X, num_features):
         return poly.fit_transform(justcoords)
     return poly.fit_transform(X)
 
+def vandermonde_tensor(x, num_features):
+    if x.shape[1] > 2:
+        i, j = 13, 12
+    else:
+        i, j = 0, 1
+    return tf.transpose(tf.stack([tf.ones_like(x[:,i]),
+                                  x[:,i],
+                                  x[:,j],
+                                  tf.square(x[:,i]),
+                                  tf.square(x[:,j]),
+                                  tf.multiply(x[:,i], x[:,j])
+                                  ]))
+
 def beta(vandermonde_x, rssinv):
     beta = np.dot(np.linalg.inv(np.dot(np.transpose(vandermonde_x), vandermonde_x)),
                           np.dot(np.transpose(vandermonde_x), np.reshape(rssinv,[rssinv.shape[0],1])))
+    return beta
+
+def beta_tensor(vandermonde_x, rssinv):
+    beta = tf.matmul(tf.linalg.inv(tf.matmul(tf.transpose(vandermonde_x), vandermonde_x)),
+                          tf.matmul(tf.transpose(vandermonde_x), tf.reshape(rssinv,[rssinv.shape[0],1])))
     return beta
 
 def fitmap(data, num_degrees, show=False, cell_tower=None):

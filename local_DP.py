@@ -42,8 +42,8 @@ class NOISE_PRIVATIZER():
         # if unconcerned with DP guarantees, set sigma directly
         sigma = (self.norm_clip/self.epsilon)*math.sqrt(2*math.log(1.25/self.delta))
         def priv(x):
-            y = x + tf.random.normal([self.n, 25], mean=0.0, stddev=sigma)
-            # y = x + tf.random.normal([1, self.n, 25], mean=0.0, stddev=sigma)
+            noise = np.random.normal(loc=0.0, scale=sigma, size=(self.n, 25))
+            y = x + noise
             return y
         return priv
 
@@ -62,18 +62,30 @@ class NOISE_PRIVATIZER():
 
     def privatize(self):
         X = self.norm_all_data[:,:25]
-        # X = X.reshape(1, self.n, 25)
-        # X = tf.clip_by_norm(X, self.norm_clip, axes=2)
-        X = tf.clip_by_norm(X, self.norm_clip, axes=1)
-        self.X = tf.cast(X, tf.float32)
+        normvec = np.linalg.norm(X, axis=1)
+        scalevec = self.norm_clip/normvec
+        scalevec[np.where(scalevec>1)] = 1
+        self.X = (X.T*scalevec).T
         self.Y = self.privatizer(self.X)
         self.u = to_categorical(self.all_data[:,25])
 
     def eval_utility(self):
-        pass
+        v = vandermonde(self.X, 2)
+        b = beta(v, self.X[:,6])
+        v_obf = vandermonde(self.Y, 2)
+        b_obf = beta(v_obf,self.Y[:,6])
+        beta_loss = np.mean(np.square(b-b_obf))
+        print("UTILITY LOSS 1 (error in map fitting):", beta_loss)
+
+        distortion_loss = np.mean(np.square(self.X-self.Y))
+        print("UTILITY LOSS 2 (full dataset distance):", distortion_loss)
+
+        geographic_distortion = np.mean(np.square(self.X[:,12:14]-self.Y[:,12:14]))
+        print("UTILITY LOSS 3 (just geographic distance):", geographic_distortion)
 
     def split_data(self, train_portion):
-        idx = np.random.randint(0, self.n, self.n)
+        idx = np.arange(self.n)
+        np.random.shuffle(idx)
         k = int(train_portion*self.n)
         trainidx = idx[:k]
         testidx = idx[k:]
@@ -85,20 +97,19 @@ class NOISE_PRIVATIZER():
         self.adversary_epochs = int(k/self.batch_size)+extra_epochs
 
     def train(self, seed=False):
+        print("training for", self.adversary_epochs, "epochs")
         for epoch in range(self.adversary_epochs):
             # Select a random batch
             if seed:
                 np.random.seed(0)
-            # TO DO slice tensor by random indices
-            Y_batch = self.Y_train[:,self.batch_size*epoch:self.batch_size*(epoch+1),:]
-            u_batch = self.u_train[:,self.batch_size*epoch:self.batch_size*(epoch+1),:]
-            print(u_batch.shape)
+            idx = np.random.randint(0, self.Y_train.shape[0], self.batch_size)
+            Y_batch = self.Y_train[idx].reshape(1, self.batch_size, 25)
+            u_batch = self.u_train[idx].reshape(1, self.batch_size, self.num_users)
             # Train the adversary
             a_loss = self.adversary.train_on_batch(Y_batch, u_batch)
             # log the progress
             if epoch % 100 == 0:
                 print ("%d [A loss: %f, acc.: %.2f%%]" % (epoch, a_loss[0], 100*a_loss[1]))
-                return
 
     def eval_privacy(self):
         Y = self.Y_test
@@ -107,14 +118,13 @@ class NOISE_PRIVATIZER():
         print("PRIVACY LOSS:", a_loss[0])
 
     def showplots(self):
-        X = self.X.eval(session=keras.backend.get_session())
-        Y = self.Y.eval(session=keras.backend.get_session())
+        X = self.X[0:100]
+        Y = self.Y[0:100]
         fig, ax = plt.subplots(1, 2, figsize=(15, 5))
-        ax[0].scatter(X[0,:,13], X[0,:,12], c=X[0,:,6].tolist())
+        ax[0].scatter(X[:,13], X[:,12], c=X[:,6].tolist())
         ax[0].set_title("Input Data")
-        ax[1].scatter(Y[0,:,13], Y[0,:,12], c=Y[0,:,6].tolist())
+        ax[1].scatter(Y[:,13], Y[:,12], c=Y[:,6].tolist())
         ax[1].set_title("Obfuscated Data")
-        # plt.colorbar()
         plt.show()
 
 all_data = np.genfromtxt('augmented_data')
@@ -124,6 +134,6 @@ n = NOISE_PRIVATIZER(all_data, norm_all_data, num_users=9, batch_size=512, epsil
 n.privatize()
 n.eval_utility()
 n.split_data(train_portion = 0.8)
-# n.train()
-# n.eval_privacy()
-# n.showplots()
+n.train()
+n.eval_privacy()
+n.showplots()

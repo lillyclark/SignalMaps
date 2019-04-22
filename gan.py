@@ -187,7 +187,7 @@ class GAN():
             uhat_batch = self.adversary.predict(Y_batch)
 
             # Train the privatizer
-            self.p_loss = self.combined.train_on_batch(X_train_batch, u_train_batch)
+            self.p_loss = self.combined.train_on_batch(X_train_batch, uhat_batch)
 
             # log the progress
             if epoch % 10 == 0:
