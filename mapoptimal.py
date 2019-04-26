@@ -15,7 +15,7 @@ scramble_all_features = True
 showplots = False
 BATCH_SIZE = 512
 train_portion = 0.7
-extra_epochs = 3000
+extra_epochs = 0 #3000
 
 # read in dataset
 all_data = np.genfromtxt('augmented_data')
@@ -75,6 +75,23 @@ print("UTILITY LOSS 2 (full dataset distance):", distortion_loss)
 
 geographic_distortion = np.mean(np.square(norm_all_data[:,12:14]-Y[:,12:14]))
 print("UTILITY LOSS 3 (just geographic distance):", geographic_distortion)
+
+# TODO
+num_grids = 15
+true_count_per_grid = np.zeros(shape=(num_grids, num_grids))
+obf_count_per_grid = np.zeros(shape=(num_grids, num_grids))
+size1 = x1max-x1min
+size2 = x2max-x2min
+for i in range(num_grids):
+    for j in range(num_grids):
+        a = x1min+(size1/num_grids*i)
+        b = x1min+(size1/num_grids*(i+1))
+        c = x2min+(size2/num_grids*j)
+        d = x2min+(size2/num_grids*(j+1))
+        true_count_per_grid[i][j] = norm_all_data[(norm_all_data[:,13] >= a ) & (norm_all_data[:,13] < b) & (norm_all_data[:,12] >= c) & (norm_all_data[:,12] < d)].shape[0]
+        obf_count_per_grid[i][j] = Y[(Y[:,13] >= a ) & (Y[:,13] < b) & (Y[:,12] >= c) & (Y[:,12] < d)].shape[0]
+geographic_density = np.mean(np.square(true_count_per_grid-obf_count_per_grid))
+print("UTILITY LOSS 4 (geographic density):", geographic_density)
 
 # evaluate privacy
 num_users = 9

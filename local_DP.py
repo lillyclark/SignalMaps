@@ -87,6 +87,22 @@ class NOISE_PRIVATIZER():
         geographic_distortion = np.mean(np.square(self.X[:,12:14]-self.Y[:,12:14]))
         print("UTILITY LOSS 3 (just geographic distance):", geographic_distortion)
 
+        num_grids = 15
+        true_count_per_grid = np.zeros(shape=(num_grids, num_grids))
+        obf_count_per_grid = np.zeros(shape=(num_grids, num_grids))
+        size1 = self.x1max-self.x1min
+        size2 = self.x2max-self.x2min
+        for i in range(num_grids):
+            for j in range(num_grids):
+                a = self.x1min+(size1/num_grids*i)
+                b = self.x1min+(size1/num_grids*(i+1))
+                c = self.x2min+(size2/num_grids*j)
+                d = self.x2min+(size2/num_grids*(j+1))
+                true_count_per_grid[i][j] = self.X[(self.X[:,13] >= a ) & (self.X[:,13] < b) & (self.X[:,12] >= c) & (self.X[:,12] < d)].shape[0]
+                obf_count_per_grid[i][j] = self.Y[(self.Y[:,13] >= a ) & (self.Y[:,13] < b) & (self.Y[:,12] >= c) & (self.Y[:,12] < d)].shape[0]
+        geographic_density = np.mean(np.square(true_count_per_grid-obf_count_per_grid))
+        print("UTILITY LOSS 4 (geographic density):", geographic_density)
+
     def split_data(self, train_portion):
         idx = np.arange(self.n)
         np.random.shuffle(idx)
@@ -118,7 +134,7 @@ class NOISE_PRIVATIZER():
     def eval_privacy(self):
         Y = self.Y_test
         u = self.u_test
-        a_loss = self.adversary.test_on_batch(Y.reshape(1, Y.shape[0], Y.shape[1]), u.reshape(1, u.shape[0], u.shape[1]))
+        a_loss = self.adversary.evaluate(Y.reshape(1, Y.shape[0], Y.shape[1]), u.reshape(1, u.shape[0], u.shape[1]), verbose=0)
         print("PRIVACY LOSS:", a_loss[0])
 
     def showplots(self):
